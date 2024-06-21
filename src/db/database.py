@@ -1,4 +1,11 @@
 import psycopg as pg
+import environs
+from src.utils import ROOT_DIR
+
+# Set up the environs
+env =environs.Env()
+
+env.read_env(str(ROOT_DIR / '.env'))
 
 #Singleton 
 class Database(object):
@@ -13,8 +20,11 @@ class Database(object):
     def __init__(self) -> None:
         self.__conn = pg.connect(
             #host = 'localhost'
-            dbname = 'myreadapp', 
-            user = 'postgres',
-            password = 'postgres',
+            dbname = env.str('db_name'), 
+            user = env.str('db_user'),
+            password = env.str('db_password'),
             #port = '5432'
         )
+if __name__ == '__main__':
+    conn = Database()
+    print(conn)
